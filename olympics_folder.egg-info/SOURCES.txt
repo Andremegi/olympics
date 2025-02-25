@@ -1,0 +1,10 @@
+README.md
+setup.py
+olympics_folder/__init__.py
+olympics_folder/api_calls.py
+olympics_folder/simple_analyzer.py
+olympics_folder.egg-info/PKG-INFO
+olympics_folder.egg-info/SOURCES.txt
+olympics_folder.egg-info/dependency_links.txt
+olympics_folder.egg-info/requires.txt
+olympics_folder.egg-info/top_level.txt
