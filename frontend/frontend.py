@@ -9,7 +9,7 @@ import pandas as pd
 st.markdown("""
     # Welcome to the Olympics App
 
-    ## Where you can find usefull **information** and **results** from *1806* till *2022*
+    ## Where you can find usefull **information** and **results** from *1896* till *2022*
 
 """)
 
@@ -23,7 +23,7 @@ final_year = col3.selectbox('Final year', range(1896,2023))
 number_countries = col4.text_input('Number of countries', '20')
 
 buton = st.button('Analyse')
-url = 'http://127.0.0.1:8000/best_countries'
+url = 'http://127.0.0.1:8000/best_countries?'
 if buton :
     params = {'desired_edition': option,
               'initial_year': initial_year,
@@ -32,20 +32,31 @@ if buton :
 
     response = requests.get(url, params=params).json()
 
-    x = response['countries']
-    width = 0.5  # the width of the bars
-    figu = plt.figure(figsize=(50,30))
-    ax = plt.subplot()
+    colors = ['#B8860B', '#FFD700',  '#A9A9A9']
 
+    #Create dataframe to be able to plot with st(with more info) and then create comparative tables
+    df = pd.DataFrame.from_dict(response)
+    sorted = df.sort_values('total', ascending = False)
+    sorted_non_spaces = sorted.copy()
+    i=0
+    for l,country in sorted[['best_countries']].iterrows():
+        sorted.loc[i,'best_countries'] = f'{country[0].rjust(int(number_countries)+1 - i)}'
+        i += 1
 
-    ax.bar(x , list(response['gold']), width, align='center', label ='Gold')
-    ax.bar(x , list(response['silver']), width, align='center', label ='Silver')
-    ax.bar(x , list(response['bronze']), width, align='center', label ='Bronze')
-    plt.legend(prop={'size': 60})
-    plt.rcParams.update({'font.size': 45})
-    plt.title(f'Medals for the {number_countries} first countrys')
-    plt.xlabel('Countries')
-    plt.ylabel('Total number of medals ')
-    st.pyplot(figu)
+    df = sorted.set_index('best_countries')
+    df =df[['gold','silver','bronze']]
+    st.markdown(f'In the next chart it is represented the gold, silver and bronze medals from the best **{number_countries}** countires in **descending** order')
+    st.markdown("""### MEDALS PER COUNTRY""")
+    st.bar_chart(df, color = colors)
+
+    sorted_non_spaces['medal/athletes best countries'] = response['proport_countries']
+
+    st.markdown(f'Bellow we compare the first **{number_countries}** countries in **descending** order, regarding:')
+    st.markdown("""
+                - On the first column *best_countries* we represent the best countries having in count their medals
+                - On the second columns *medal/athletes best countries* we calculate a proportion of the number of medals and the number of athlets
+                """)
+    st.table(sorted_non_spaces[['best_countries','medal/athletes best countries']])
+
 
     # Posible mejore , crear un grafico iterativo
