@@ -165,7 +165,7 @@ def evolution_per_year(year=1896, country='USA'):
     #cleaning data
     athlete_biography_extended2_df = cleaning_top_athlets(athlete_biography_extended2_df)
 
-    sports_medals_year = pd.DataFrame(athlete_biography_extended2_df[(athlete_biography_extended2_df['country_noc'] == country) & (athlete_biography_extended2_df['year'] == year)].groupby('sport').sum()['medal'])
+    sports_medals_year = pd.DataFrame(athlete_biography_extended2_df[(athlete_biography_extended2_df['country_noc'] == country) & (athlete_biography_extended2_df['year'] == int(year))].groupby('sport').sum()['medal'])
 
     return sports_medals_year
 
@@ -173,4 +173,4 @@ def evolution_per_year(year=1896, country='USA'):
 #print(desired_history())
 #print(proportional_medals_athlets())
 #print(top3_athlete_category())
-print(evolution_per_year(1896,'USA')['medal'].to_list())
+print(type(evolution_per_year(1896,'USA')))
