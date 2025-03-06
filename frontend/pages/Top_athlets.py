@@ -25,7 +25,7 @@ sports= athlete_event_detailed_df['sport'].unique()
 
 st.markdown("""
 
-    ## Here you can check the best **5** athlets in any sport and category of your choice
+    ### Here you can check the best **5** athlets in any sport and category of your choice
 
 """)
 

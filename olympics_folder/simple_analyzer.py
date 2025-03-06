@@ -86,7 +86,7 @@ def proportional_medals_athlets(desired_edition='Olympics',
 def cleaning_top_athlets(df):
     # Replace Nan 0
     df['medal'] = df['medal'].fillna(0)
-    df = df.dropna()
+    #df = df.dropna()
     df = df.drop(columns='pos')
     df['points'] = df['medal'].map({'Bronze':1,'Silver':2, 'Gold':3, 0:0 })
     df['medal'] = df['medal'].map({'Bronze':1,'Silver':1, 'Gold':1, 0:0 })
@@ -114,7 +114,7 @@ def top3_athlete_category(sport='Athletics', category='1,500 metres, Men', initi
 
     #Filter by year
     clean_df = clean_df[(clean_df['year'] >= int(initial_year)) & (clean_df['year']<= int(final_year)) ]
-
+    print(clean_df)
    #Filter 3-5 first athlets selon the sport and category regarding 1. their point (3 first, 2 second, 1 third) 2. their number of medals
    # Create 2 different df , 1. Athlets selon their number of medals, 2. Athlets selon their number of points
     num_medals_ath_cat = clean_df[(clean_df['sport']==sport) & (clean_df['event']==category)].groupby('athlete').sum().sort_values('medal', ascending = False).head(5)
@@ -130,7 +130,14 @@ def country_con_noc(country_name):
     """
     Get the noc of country
     """
-    country = country_profiles_df[country_profiles_df['noc']== country_name].iloc[0]['country']
+    country = country_profiles_df[country_profiles_df['noc'] == country_name].iloc[0]['country']
+    return country
+
+def country_to_noc(country_name):
+    """
+    Get the noc of country
+    """
+    country = country_profiles_df[country_profiles_df['country'] == country_name].iloc[0]['noc']
     return country
 
 def country_evolution(country='USA'):
@@ -173,4 +180,4 @@ def evolution_per_year(year=1896, country='USA'):
 #print(desired_history())
 #print(proportional_medals_athlets())
 #print(top3_athlete_category())
-print(type(evolution_per_year(1896,'USA')))
+print(top3_athlete_category(sport='Judo', category='Extra-Light Weight, Men', initial_year=2022, final_year=2022))
