@@ -42,14 +42,15 @@ if option =='Equestrian':
     st.markdown(f'**Intercalted** is a special edition cariied out in **1956** where only 7 countries compited ')
 
 buton = st.button('Analyse')
-url = 'http://127.0.0.1:8000/best_countries?'
+url_render = 'https://olympiastats.onrender.com/best_countries?'
+#url = 'http://127.0.0.1:8000/best_countries?'
 if buton :
     params = {'desired_edition': option,
               'initial_year': initial_year,
               'final_year': final_year,
               'number_countries': number_countries}
 
-    response = requests.get(url, params=params).json()
+    response = requests.get(url_render, params=params).json()
 
     colors = ['#FFD700', '#C0C0C0',  '#B8860B']
 

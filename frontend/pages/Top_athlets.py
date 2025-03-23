@@ -38,15 +38,15 @@ category = col2.selectbox('Select category',cat )
 initial_year = col3.selectbox('Initial year', range(1896,2023))
 final_year = col4.selectbox('Final year', range(1896,2023))
 
-
-url ='http://127.0.0.1:8000/best_athlets'
+url_render = 'https://olympiastats.onrender.com/best_athlets?'
+#url ='http://127.0.0.1:8000/best_athlets'
 params = {'sport':sport,
           'category':category,
           'initial_year':initial_year,
           'final_year':final_year}
 buton = st.button('Analyze')
 if buton:
-    response = requests.get(url, params=params).json()
+    response = requests.get(url_render, params=params).json()
     df_medal = pd.DataFrame.from_dict(response[0]).sort_values('num_medals', ascending =False)
     df_points = pd.DataFrame.from_dict(response[1]).sort_values('num_points', ascending=False)
 

@@ -17,12 +17,13 @@ st.markdown("""
 
 
 country = st.selectbox('Select sport', countries)
-url ='http://127.0.0.1:8000/country_evolution'
+url_render ='https://olympiastats.onrender.com/country_evolution?'
+#url ='http://127.0.0.1:8000/country_evolution'
 params = {'country_noc': country_to_noc(country)}
 
 
 
-response = requests.get(url, params=params).json()
+response = requests.get(url_render, params=params).json()
 country_ev_df = pd.DataFrame(response[0])
 table_country_ev_df = pd.DataFrame(response[1])
 
@@ -38,10 +39,11 @@ st.markdown('### Would you like to dig deeper into the information on any specif
 year = st.selectbox('Select a year', range(1896,2023))
 buton = st.button('Select')
 if buton:
-    url3= 'http://127.0.0.1:8000/deeper_country_evolution'
+    url3_render = 'https://olympiastats.onrender.com/deeper_country_evolution?'
+    #url3= 'http://127.0.0.1:8000/deeper_country_evolution'
     params3= {'year':int(year),
             'country_noc':country_to_noc(country)}
-    response3 = requests.get(url3,params=params3).json()
+    response3 = requests.get(url3_render,params=params3).json()
 
     year_info_df = pd.DataFrame(response3)
     st.table(year_info_df)

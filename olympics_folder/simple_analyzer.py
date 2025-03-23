@@ -3,6 +3,7 @@ from datetime import datetime
 import pandas as pd
 import numpy as np
 
+
 # Adquiring relative path of this file
 path = os.path.dirname(__file__)
 
