@@ -2,7 +2,6 @@ import streamlit as st
 import os
 import pandas as pd
 import requests
-from olympics_folder.simple_analyzer import country_to_noc
 
 # Adquiring relative path of this file
 path = os.path.dirname(__file__)
