@@ -84,6 +84,7 @@ def proportional_medals_athlets(desired_edition='Olympics',
     prop_medal_athlets_df = medal_sum_df.sort_values('proportion_medal_athletes', ascending=False)[['number_athlets', 'proportion_medal_athletes']]
 
     return prop_medal_athlets_df
+
 def cleaning_top_athlets(df):
     # Replace Nan 0
     df['medal'] = df['medal'].fillna(0)

@@ -4,7 +4,6 @@ import requests
 import matplotlib.pyplot as plt
 import plotly.express as px
 import pandas as pd
-from olympics_folder.simple_analyzer import country_con_noc
 
 
 st.markdown("""
@@ -44,6 +43,7 @@ if option =='Equestrian':
 buton = st.button('Analyse')
 url_render = 'https://olympiastats.onrender.com/best_countries?'
 #url = 'http://127.0.0.1:8000/best_countries?'
+
 if buton :
     params = {'desired_edition': option,
               'initial_year': initial_year,
@@ -73,13 +73,23 @@ if buton :
     st.bar_chart(df, color = colors)
 
     sorted_non_spaces['medal/athletes best countries'] = response['proport_countries']
-    sorted_non_spaces['medal/athletes best countries country '] = sorted_non_spaces['medal/athletes best countries'].apply(lambda row : country_con_noc(row))
-    sorted_non_spaces['best countries country'] = sorted_non_spaces['best_countries'].apply(lambda row : country_con_noc(row))
+
+    #this only works locally , in the moment you apply it on the cloud breaks so we change it
+        #sorted_non_spaces['medal/athletes best countries country '] = sorted_non_spaces['medal/athletes best countries'].apply(lambda row : country_con_noc(row))
+        #sorted_non_spaces['best countries country'] = sorted_non_spaces['best_countries'].apply(lambda row : country_con_noc(row))
+
+    # you need to caal to the API so your function is recognised
+    url_con_noc ='http://127.0.0.1:8000/country_to_noc?'
+
+    #1. for the best countries
+    sorted_non_spaces['best countries country'] = sorted_non_spaces['best_countries'].apply(lambda row : requests.get(url_con_noc, params = {'argument':row }).json()['name'])
+    # 2. for the medal athlets ratio
+    sorted_non_spaces['medal/athletes best countries country'] = sorted_non_spaces['medal/athletes best countries'].apply(lambda row : requests.get(url_con_noc, params = {'argument':row }).json()['name'])
 
     st.markdown(f'Bellow we compare the first **{number_countries}** countries in **descending** order, regarding:')
     st.markdown("""
                 - The first column *best_countries country* represents the best countries having regarding their medals
-                - The second column *medal/athletes best countries country*  represents a ratio between the number of medals and the number of athlets eaxh country has in descending order
+                - The second column *medal/athletes best countries country*  represents a ratio between the number of medals and the number of athlets each country has, in descending order
 
                 """)
-    st.table(sorted_non_spaces[['best countries country','medal/athletes best countries country ' ]])
+    st.table(sorted_non_spaces[['best countries country','medal/athletes best countries country' ]])

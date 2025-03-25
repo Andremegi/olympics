@@ -1,5 +1,6 @@
 from fastapi import FastAPI
-from olympics_folder.simple_analyzer import desired_history, proportional_medals_athlets, top3_athlete_category, country_evolution, number_athlets
+import pandas as pd
+from olympics_folder.simple_analyzer import desired_history, proportional_medals_athlets, top3_athlete_category, country_evolution, number_athlets, country_to_noc, country_con_noc
 from olympics_folder.simple_analyzer import evolution_per_year
 from datetime import datetime
 app = FastAPI()
@@ -62,3 +63,16 @@ def deeper_country_evolution_api(year=1896, country_noc='USA'):
     print(evolution_df)
     return {'sport': evolution_df.index.to_list(),
             'number_medals':evolution_df['medal'].to_list()}
+
+
+@app.get('/country_to_noc')
+def change_country_name(argument):
+
+    if len(argument) > 3:
+    #Country to noc pass only one parameter
+        noc = country_to_noc(argument)
+    else:
+    #Country con noc is used on a df
+        noc= country_con_noc(argument)
+
+    return {'name': noc}
