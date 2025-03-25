@@ -42,7 +42,7 @@ if option =='Equestrian':
 
 buton = st.button('Analyse')
 url_render = 'https://olympiastats.onrender.com/best_countries?'
-#url = 'http://127.0.0.1:8000/best_countries?'
+#localurl: url = 'http://127.0.0.1:8000/best_countries?'
 
 if buton :
     params = {'desired_edition': option,
@@ -74,17 +74,19 @@ if buton :
 
     sorted_non_spaces['medal/athletes best countries'] = response['proport_countries']
 
-    #this only works locally , in the moment you apply it on the cloud breaks so we change it
+
+    # This only works locally , in the moment you apply it on the cloud breaks so we change it
         #sorted_non_spaces['medal/athletes best countries country '] = sorted_non_spaces['medal/athletes best countries'].apply(lambda row : country_con_noc(row))
         #sorted_non_spaces['best countries country'] = sorted_non_spaces['best_countries'].apply(lambda row : country_con_noc(row))
 
     # you need to caal to the API so your function is recognised
-    url_con_noc ='http://127.0.0.1:8000/country_to_noc?'
+    # localurl: url_con_noc ='http://127.0.0.1:8000/country_to_noc?'
+    url_country_name_render ='https://olympiastats.onrender.com/country_to_noc?'
 
     #1. for the best countries
-    sorted_non_spaces['best countries country'] = sorted_non_spaces['best_countries'].apply(lambda row : requests.get(url_con_noc, params = {'argument':row }).json()['name'])
+    sorted_non_spaces['best countries country'] = sorted_non_spaces['best_countries'].apply(lambda row : requests.get(url_country_name_render, params = {'argument':row }).json()['name'])
     # 2. for the medal athlets ratio
-    sorted_non_spaces['medal/athletes best countries country'] = sorted_non_spaces['medal/athletes best countries'].apply(lambda row : requests.get(url_con_noc, params = {'argument':row }).json()['name'])
+    sorted_non_spaces['medal/athletes best countries country'] = sorted_non_spaces['medal/athletes best countries'].apply(lambda row : requests.get(url_country_name_render, params = {'argument':row }).json()['name'])
 
     st.markdown(f'Bellow we compare the first **{number_countries}** countries in **descending** order, regarding:')
     st.markdown("""
