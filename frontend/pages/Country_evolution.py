@@ -18,10 +18,11 @@ st.markdown("""
 
 country = st.selectbox('Select sport', countries)
 url_render ='https://olympiastats.onrender.com/country_evolution?'
-#url ='http://127.0.0.1:8000/country_evolution'
+#localurl: url ='http://127.0.0.1:8000/country_evolution'
 
-url_country_name ='http://127.0.0.1:8000/country_to_noc?'
-params = {'country_noc': requests.get(url_country_name, params = {'argument':country }).json()['name']}
+#localurl: url_country_name ='http://127.0.0.1:8000/country_to_noc?'
+url_country_name_render ='https://olympiastats.onrender.com/country_to_noc?'
+params = {'country_noc': requests.get(url_country_name_render, params = {'argument':country }).json()['name']}
 
 
 
@@ -42,9 +43,9 @@ year = st.selectbox('Select a year', range(1896,2023))
 buton = st.button('Select')
 if buton:
     url3_render = 'https://olympiastats.onrender.com/deeper_country_evolution?'
-    #url3= 'http://127.0.0.1:8000/deeper_country_evolution'
+    #local url : url3= 'http://127.0.0.1:8000/deeper_country_evolution'
     params3= {'year':int(year),
-            'country_noc':requests.get(url_country_name, params = {'argument':country }).json()['name']}
+            'country_noc':requests.get(url_country_name_render, params = {'argument':country }).json()['name']}
     response3 = requests.get(url3_render,params=params3).json()
 
     year_info_df = pd.DataFrame(response3)
