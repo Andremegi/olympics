@@ -36,7 +36,7 @@ sport = col1.selectbox('Select sport', sports)
 cat = athlete_event_detailed_df[athlete_event_detailed_df['sport']==sport]['event'].unique()
 category = col2.selectbox('Select category',cat )
 initial_year = col3.selectbox('Initial year', range(1896,2023))
-final_year = col4.selectbox('Final year', range(1896,2023))
+final_year = col4.selectbox('Final year', range(initial_year,2023))
 
 url_render = 'https://olympiastats.onrender.com/best_athlets?'
 #url ='http://127.0.0.1:8000/best_athlets'
@@ -44,6 +44,7 @@ params = {'sport':sport,
           'category':category,
           'initial_year':initial_year,
           'final_year':final_year}
+
 buton = st.button('Analyze')
 if buton:
     response = requests.get(url_render, params=params).json()
@@ -53,12 +54,21 @@ if buton:
 
     df_medal = blank_space(df_medal,'top5_medal_athlets')
     df_points = blank_space(df_points,'top5_points_athlets')
+    df_medal.rename(columns={'medal_athlets_country':'Countries'}, inplace =True)
+    df_points.rename(columns={'points_athlets_country':'Countries'}, inplace =True)
 
     st.markdown("""
                 ### Regarding their **number of medals**
                 """)
     st.markdown(f'Please note that its posible that there are more athlets with the same number of medals')
-    st.bar_chart(df_medal, x= 'top5_medal_athlets', y='num_medals', color = 'medal_athlets_country')
+
+    st.bar_chart(df_medal,
+                 x= 'top5_medal_athlets',
+                 y='num_medals',
+                 color = 'Countries',
+                 x_label='Top 5 athlets',
+                 y_label='Number of medals')
+
     st.markdown("""
                 ### Regarding their **points**
                 """)
@@ -69,4 +79,9 @@ if buton:
                 - **1** point for the **third** position
                 """)
 
-    st.bar_chart(df_points, x= 'top5_points_athlets',y='num_points', color = 'points_athlets_country')
+    st.bar_chart(df_points,
+                 x= 'top5_points_athlets',
+                 y='num_points',
+                 color = 'Countries',
+                 x_label = 'Top 5 athlets',
+                 y_label = 'Number of points')

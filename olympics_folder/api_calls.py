@@ -1,4 +1,5 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Query
+from typing import List
 import pandas as pd
 from olympics_folder.simple_analyzer import desired_history, proportional_medals_athlets, top3_athlete_category, country_evolution, number_athlets, country_to_noc, country_con_noc
 from olympics_folder.simple_analyzer import evolution_per_year
@@ -76,3 +77,12 @@ def change_country_name(argument):
         noc= country_con_noc(argument)
 
     return {'name': noc}
+
+@app.get("/list_country_names")
+def list_country_names(list: List[str] = Query(None)):
+    #query_items = {"name": list}
+    names=[]
+    for item in list:
+        names.append(country_con_noc(item))
+
+    return {"list": names}
