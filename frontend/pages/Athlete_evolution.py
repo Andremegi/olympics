@@ -47,17 +47,21 @@ st.markdown('- Olympic year and age the athlete where when compited: ')
 athlete_needed =pd.DataFrame.from_dict(response)
 year_table = athlete_needed[['Edition','Age']].drop_duplicates().set_index('Edition')
 st.table(data=year_table )
+athlete_evolution_table = athlete_needed.groupby('Edition', as_index=False)[['Edition','event','Medal']].value_counts()
+athlete_evolution_table = athlete_evolution_table.rename(columns={'count': 'Number of medals', 'event': 'Event'})
+athlete_evolution_table.loc[athlete_evolution_table['Medal'] == 0 ,'Medal'] = 'No medals'
+athlete_evolution_table.loc[athlete_evolution_table['Medal'] == 'No medals' ,'Number of medals'] = 0
+
 athlete_evolution = athlete_needed.groupby('Edition', as_index=False)[['Edition','Medal']].value_counts()
 athlete_evolution = athlete_evolution.rename(columns={'count': 'Number of medals'})
-
 athlete_evolution.loc[athlete_evolution['Medal']==0 ,'Number of medals'] = 0
+
 edition_medals = athlete_evolution.groupby('Edition', as_index=False)[['Edition','Number of medals']].sum()
 edition_medals['Edition'] = edition_medals['Edition'].apply(lambda row : row[0:4])
 
 st.markdown('# Evolution of medals in the different olympics edition')
 st.line_chart(data = edition_medals, x='Edition' ,y ='Number of medals',  x_label ='Olympic year', y_label ='Number of medals')
 
-athlete_evolution.loc[athlete_evolution['Medal'] == 0 ,'Medal'] = 'No medals'
-athlete_evolution.loc[athlete_evolution['Medal'] == 'No medals' ,'Number of medals'] = 1
+
 st.markdown(" Deep depiction of the medals ")
-st.table(athlete_evolution.set_index('Edition'))
+st.table(athlete_evolution_table.set_index('Edition'))
