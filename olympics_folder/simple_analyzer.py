@@ -2,6 +2,7 @@ import os
 from datetime import datetime
 import pandas as pd
 import numpy as np
+import re
 
 
 # Adquiring relative path of this file
@@ -179,7 +180,47 @@ def evolution_per_year(year=1896, country='USA'):
     return sports_medals_year
 
 
+def born_year(date):
+    if type(date) == str:
+        list_date = date.split()
+        target = re.sub('[^0-9]','', list_date[-1])
+        if ('1' in  target) or ('2' in target) :
+            return int(target)
+        else: return 0
+
+    return int(date)
+
+
+def clean_ath_datasets(df):
+    #Fillna
+    df['pos'] = df['pos'].fillna('-No information')
+    df['medal'] = df['medal'].fillna(0)
+    df['sex'] = df['sex'].fillna('-Not specified')
+    df['height'] = df['height'].fillna('-Not specified')
+    df['weight'] = df['weight'].fillna('-Not specified')
+    df['born'] = df['born'].fillna(0)
+    df['description'] = df['description'].fillna('-Not specified')
+    df['special_notes'] = df['special_notes'].fillna('-Not specified')
+
+    #Replacements
+    df['pos'] = df['pos'].replace(['DNS','DNF', 'DQ'],['Did not start', 'Did not finish', 'Disqualified'])
+
+    #New creations
+    df['age'] = df.apply(lambda row:int(row['edition'][0:4]) - born_year(row['born']), axis=1)
+    df['age'] = df['age'].apply(lambda row : '-Not specified' if row > 100 else row)
+
+    return df.dropna()
+
+def athlete(sport='Athletics', name='Usain Bolt'):
+    athlete_event_df = athlete_event_detailed_df.drop_duplicates()
+    athlete_df = athlete_event_df.merge(athlete_biography_df, how ='left', on ='athlete_id')
+    athlete_df = athlete_df.drop(columns={'result_id','athlete_id'})
+    athlete_clean_df = clean_ath_datasets(athlete_df)
+    athlete_info_df = athlete_clean_df [(athlete_clean_df['sport']==sport) & (athlete_clean_df['athlete']==name)]
+    return athlete_info_df
+
+
 #print(desired_history())
 #print(proportional_medals_athlets())
 #print(top3_athlete_category())
-print(top3_athlete_category(sport='Judo', category='Extra-Light Weight, Men', initial_year=2022, final_year=2022))
+print(athlete())

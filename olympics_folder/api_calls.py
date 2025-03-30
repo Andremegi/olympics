@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Query
 from typing import List
 import pandas as pd
-from olympics_folder.simple_analyzer import desired_history, proportional_medals_athlets, top3_athlete_category, country_evolution, number_athlets, country_to_noc, country_con_noc
+from olympics_folder.simple_analyzer import desired_history, proportional_medals_athlets, top3_athlete_category, country_evolution, number_athlets, country_to_noc, country_con_noc, athlete
 from olympics_folder.simple_analyzer import evolution_per_year
 from datetime import datetime
 app = FastAPI()
@@ -86,3 +86,22 @@ def list_country_names(list: List[str] = Query(None)):
         names.append(country_con_noc(item))
 
     return {"list": names}
+
+@app.get("/athlete_evolution")
+def athlete_evolution(sport='Athletics', name ='Usain Bolt'):
+    #query_items = {"name": list}
+    athlete_df = athlete(sport,name)
+
+    return {'Edition':athlete_df['edition'].to_list(),
+            'country':athlete_df['country'].to_list(),
+            'event': athlete_df['event'].to_list(),
+            'position':athlete_df['pos'].to_list(),
+            'Medal': athlete_df['medal'].to_list(),
+            'isTeamSport':athlete_df['isTeamSport'].to_list(),
+            'sex': athlete_df['sex'].to_list(),
+            'born': athlete_df['born'].to_list(),
+            'height': athlete_df['height'].to_list(),
+            'weight': athlete_df['weight'].to_list(),
+            'description': athlete_df['description'].to_list(),
+            'special notes': athlete_df['special_notes'].to_list(),
+            'Age': athlete_df['age'].to_list()}
