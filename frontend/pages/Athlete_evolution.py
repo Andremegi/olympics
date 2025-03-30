@@ -21,11 +21,12 @@ sport = cola.selectbox('Select sport', sports)
 ath = athlete_event_detailed_df[athlete_event_detailed_df['sport']==sport]['athlete'].unique()
 athlete = colb.selectbox('Select athlete', ath)
 
-url ='http://127.0.0.1:8000/athlete_evolution?'
+#url ='http://127.0.0.1:8000/athlete_evolution?'
+url_render = 'https://olympiastats.onrender.com/athlete_evolution?'
 params ={'sport':sport,
          'name': athlete}
 
-response = requests.get(url, params=params).json()
+response = requests.get(url_render, params=params).json()
 
 
 
