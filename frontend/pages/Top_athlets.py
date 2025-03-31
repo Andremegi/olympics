@@ -47,41 +47,46 @@ params = {'sport':sport,
 
 buton = st.button('Analyze')
 if buton:
-    response = requests.get(url_render, params=params).json()
-    df_medal = pd.DataFrame.from_dict(response[0]).sort_values('num_medals', ascending =False)
-    df_points = pd.DataFrame.from_dict(response[1]).sort_values('num_points', ascending=False)
+    response = requests.get(url_render, params=params)
+    #response.raise_for_status()  # raises exception when not a 2xx response
+    if str(response.status_code)[0] in '45':
+        st.markdown(f'# Error {response.status_code}, please reload the window')
+    if response.status_code != 204:
+        response = response.json()
+        df_medal = pd.DataFrame.from_dict(response[0]).sort_values('num_medals', ascending =False)
+        df_points = pd.DataFrame.from_dict(response[1]).sort_values('num_points', ascending=False)
 
 
-    df_medal = blank_space(df_medal,'top5_medal_athlets')
-    df_points = blank_space(df_points,'top5_points_athlets')
-    df_medal.rename(columns={'medal_athlets_country':'Countries'}, inplace =True)
-    df_points.rename(columns={'points_athlets_country':'Countries'}, inplace =True)
+        df_medal = blank_space(df_medal,'top5_medal_athlets')
+        df_points = blank_space(df_points,'top5_points_athlets')
+        df_medal.rename(columns={'medal_athlets_country':'Countries'}, inplace =True)
+        df_points.rename(columns={'points_athlets_country':'Countries'}, inplace =True)
 
-    st.markdown("""
-                ### Regarding their **number of medals**
-                """)
-    st.markdown(f'Please note that its posible that there are more athlets with the same number of medals')
+        st.markdown("""
+                    ### Regarding their **number of medals**
+                    """)
+        st.markdown(f'Please note that its posible that there are more athlets with the same number of medals')
 
-    st.bar_chart(df_medal,
-                 x= 'top5_medal_athlets',
-                 y='num_medals',
-                 color = 'Countries',
-                 x_label='Top 5 athlets',
-                 y_label='Number of medals')
+        st.bar_chart(df_medal,
+                    x= 'top5_medal_athlets',
+                    y='num_medals',
+                    color = 'Countries',
+                    x_label='Top 5 athlets',
+                    y_label='Number of medals')
 
-    st.markdown("""
-                ### Regarding their **points**
-                """)
-    st.markdown("""
-                The points are stipulated like :
-                - **3** points for the **first** position
-                - **2** points for the **second** position
-                - **1** point for the **third** position
-                """)
+        st.markdown("""
+                    ### Regarding their **points**
+                    """)
+        st.markdown("""
+                    The points are stipulated like :
+                    - **3** points for the **first** position
+                    - **2** points for the **second** position
+                    - **1** point for the **third** position
+                    """)
 
-    st.bar_chart(df_points,
-                 x= 'top5_points_athlets',
-                 y='num_points',
-                 color = 'Countries',
-                 x_label = 'Top 5 athlets',
-                 y_label = 'Number of points')
+        st.bar_chart(df_points,
+                    x= 'top5_points_athlets',
+                    y='num_points',
+                    color = 'Countries',
+                    x_label = 'Top 5 athlets',
+                    y_label = 'Number of points')

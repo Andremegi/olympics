@@ -26,36 +26,47 @@ params = {'country_noc': param }
 
 
 
-response = requests.get(url_render, params=params).json()
-country_ev_df = pd.DataFrame(response[0])
-table_country_ev_df = pd.DataFrame(response[1]).sort_values('year', ascending = True)
-table_country_ev_df.rename(columns={'year':'Year',
-                                    'edition': 'Edition',
-                                    'total':'Total medals',
-                                    'gold':'Gold medals',
-                                    'silver':'Silver medals',
-                                    'bronze':'Bronze medals',
-                                    'num_ath':'Athlets'}, inplace = True)
-table_country_ev_df = table_country_ev_df.set_index('Year')
-if country_ev_df.empty:
-    st.markdown('Ups it seems that this country has no medals yet')
-else:
-    st.markdown(f"The evolution for {country_ev_df.loc[0]['country']} :")
-    st.line_chart(country_ev_df, x='year', y='total', color='edition', y_label= 'Total number of medals', x_label='Year')
-    st.table(table_country_ev_df)
+response = requests.get(url_render, params=params)
+#response.raise_for_status()  # raises exception when not a 2xx response
+if str(response.status_code)[0] in '45':
+        st.markdown(f'# Error {response.status_code}, please reload the window')
+if response.status_code != 204:
+    response = response.json()
+    country_ev_df = pd.DataFrame(response[0])
+    table_country_ev_df = pd.DataFrame(response[1]).sort_values('year', ascending = True)
+    table_country_ev_df.rename(columns={'year':'Year',
+                                        'edition': 'Edition',
+                                        'total':'Total medals',
+                                        'gold':'Gold medals',
+                                        'silver':'Silver medals',
+                                        'bronze':'Bronze medals',
+                                        'num_ath':'Athlets'}, inplace = True)
+    table_country_ev_df = table_country_ev_df.set_index('Year')
+    if country_ev_df.empty:
+        st.markdown('Ups it seems that this country has no medals yet')
+    else:
+        country_ev_df['year'] = country_ev_df['year'].astype(str)
+        st.markdown(f"The evolution for {country_ev_df.loc[0]['country']} :")
+        st.line_chart(country_ev_df, x='year', y='total', color='edition', y_label= 'Total number of medals', x_label='Year')
+        st.table(table_country_ev_df)
 
-
-st.markdown('### Would you like to dig deeper into the information on any specific year?')
-year = st.selectbox('Select a year', range(1896,2023))
-buton = st.button('Select')
-if buton:
-    url3_render = 'https://olympiastats.onrender.com/deeper_country_evolution?'
-    #local url : url3= 'http://127.0.0.1:8000/deeper_country_evolution'
-    params3= {'year':int(year),
-            'country_noc': param}
-    response3 = requests.get(url3_render,params=params3).json()
-
-    year_info_df = pd.DataFrame(response3)
-    st.table(year_info_df)
-else:
-    st.markdown('Select a year and find the info')
+        st.markdown('### Would you like to dig deeper into the information from any specific year?')
+        year = st.selectbox('Select a year', range(1896,2023))
+        buton = st.button('Select')
+        if buton:
+            url3_render = 'https://olympiastats.onrender.com/deeper_country_evolution?'
+            #local url : url3= 'http://127.0.0.1:8000/deeper_country_evolution'
+            params3= {'year':int(year),
+                    'country_noc': param}
+            response3 = requests.get(url3_render,params=params3)
+            #response3.raise_for_status()  # raises exception when not a 2xx response
+            if str(response3.status_code)[0] in '45':
+                st.markdown(f'# Error {response.status_code}, please reload the window')
+            if response3.status_code != 204:
+                response3 = response3.json()
+                year_info_df = pd.DataFrame(response3)
+                year_info_df = year_info_df.set_index('sport')
+                year_info_df = year_info_df.rename(columns={'sport':'Sport','number_medals':'Number of medals'})
+                st.table(year_info_df)
+        else:
+            st.markdown('Select a year and find the info')

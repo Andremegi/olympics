@@ -16,8 +16,6 @@ def best_countries(desired_edition='Olympics',
                     final_year = datetime.today().year,
                     number_countries =20):
     desired_df = desired_history(desired_edition, initial_year, final_year, number_countries)
-    #print(desired_df.index.to_list())
-    #print(desired_df['total'].to_list())
     proportional_df = proportional_medals_athlets(desired_edition,initial_year ,final_year ,number_countries)
 
     return {'best_countries': desired_df.index.to_list(),
@@ -80,7 +78,6 @@ def change_country_name(argument):
 
 @app.get("/list_country_names")
 def list_country_names(list: List[str] = Query(None)):
-    #query_items = {"name": list}
     names=[]
     for item in list:
         names.append(country_con_noc(item))
@@ -89,7 +86,6 @@ def list_country_names(list: List[str] = Query(None)):
 
 @app.get("/athlete_evolution")
 def athlete_evolution(sport='Athletics', name ='Usain Bolt'):
-    #query_items = {"name": list}
     athlete_df = athlete(sport,name)
 
     return {'Edition':athlete_df['edition'].to_list(),
