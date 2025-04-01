@@ -59,7 +59,6 @@ def country_evolution_api(country_noc='USA'):
 @app.get('/deeper_country_evolution')
 def deeper_country_evolution_api(year=1896, country_noc='USA'):
     evolution_df = evolution_per_year(str(year), country_noc)
-    print(evolution_df)
     return {'sport': evolution_df.index.to_list(),
             'number_medals':evolution_df['medal'].to_list()}
 

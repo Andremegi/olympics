@@ -74,13 +74,11 @@ def proportional_medals_athlets(desired_edition='Olympics',
     #Takes the number of athlets inside the number_countries per country
     countries = medal_sum_df.index.unique()
 
-    #first_ath_country=[]
-    for index, country in enumerate(countries):
-        medal_sum_df.loc[index,'number_athlets']=desired_athlete_biography_extended_df[desired_athlete_biography_extended_df['country_noc'] == f'{country}'].shape[0]
+    first_ath_country=[]
+    for country in countries:
+        first_ath_country.append(desired_athlete_biography_extended_df[desired_athlete_biography_extended_df['country_noc'] == f'{country}'].shape[0])
+    medal_sum_df['number_athlets']=first_ath_country
 
-        #first_ath_country.append(desired_athlete_biography_extended_df[desired_athlete_biography_extended_df['country_noc'] == f'{country}'].shape[0])
-
-    #medal_sum_df['number_athlets']=first_ath_country
     #Creates the proportion
     medal_sum_df['proportion_medal_athletes']=medal_sum_df['total']/medal_sum_df['number_athlets']
     prop_medal_athlets_df = medal_sum_df.sort_values('proportion_medal_athletes', ascending=False)[['number_athlets', 'proportion_medal_athletes']]
@@ -90,7 +88,6 @@ def proportional_medals_athlets(desired_edition='Olympics',
 def cleaning_top_athlets(df):
     # Replace Nan 0
     df['medal'] = df['medal'].fillna(0)
-    #df = df.dropna()
     df = df.drop(columns='pos')
     df['points'] = df['medal'].map({'Bronze':1,'Silver':2, 'Gold':3, 0:0 })
     df['medal'] = df['medal'].map({'Bronze':1,'Silver':1, 'Gold':1, 0:0 })
@@ -108,12 +105,9 @@ def country_athlete(athletes, df):
     return countries
 
 def top3_athlete_category(sport='Athletics', category='1,500 metres, Men', initial_year=1896, final_year=2022):
-    #getting info of the morphology of athlets and putting all together
-    athlete_morphotype = athlete_biography_df[['athlete_id', 'sex', 'born', 'height', 'weight']]
-    athlete_biography_extended2_df = athlete_event_detailed_df.merge(athlete_morphotype, how='left', on = 'athlete_id')
 
     #cleaning data
-    clean_df = cleaning_top_athlets(athlete_biography_extended2_df)
+    clean_df = cleaning_top_athlets(athlete_event_detailed_df)
 
     #Filter by year
     clean_df = clean_df[(clean_df['year'] >= int(initial_year)) & (clean_df['year']<= int(final_year)) ]
@@ -153,31 +147,21 @@ def country_evolution(country='USA'):
     return country_history_df
 
 def number_athlets(country='USA'):
-    #num_ath=[]
+    num_ath=[]
     year_medals_per_country_df= country_evolution(country)
-
-    #getting info of the morphology of athlets and putting all together
-    #athlete_morphotype = athlete_biography_df[['athlete_id', 'sex', 'born', 'height', 'weight']]
-    #athlete_biography_extended2_df = athlete_event_detailed_df.merge(athlete_morphotype, how='left', on = 'athlete_id')
     #cleaning data
     athlete_biography_extended2_df = cleaning_top_athlets(athlete_event_detailed_df)
-    for index,year in enumerate(year_medals_per_country_df['year'].to_list()):
-        year_medals_per_country_df.loc[index,'num_ath'] = athlete_biography_extended2_df[(athlete_biography_extended2_df['country_noc'] == country) & (athlete_biography_extended2_df['year'] == year)]['athlete_id'].nunique()
-
-        #num_ath.append(athlete_biography_extended2_df[(athlete_biography_extended2_df['country_noc'] == country) & (athlete_biography_extended2_df['year'] == year)]['athlete_id'].nunique())
-    #year_medals_per_country_df['num_ath']=num_ath
-    #year_medals_per_country_df['editions']=year_medals_per_country_df['edition'].apply(lambda row : row.split()[1])
+    for year in year_medals_per_country_df['year'].to_list():
+        num_ath.append(athlete_biography_extended2_df[(athlete_biography_extended2_df['country_noc'] == country) & (athlete_biography_extended2_df['year'] == year)]['athlete_id'].nunique())
+    year_medals_per_country_df['num_ath']=num_ath
 
     return year_medals_per_country_df
 
 def evolution_per_year(year=1896, country='USA'):
-    #getting info of the morphology of athlets and putting all together
-    #athlete_morphotype = athlete_biography_df[['athlete_id', 'sex', 'born', 'height', 'weight']]
-    #athlete_biography_extended2_df = athlete_event_detailed_df.merge(athlete_morphotype, how='left', on = 'athlete_id')
-
     #cleaning data
     athlete_biography_extended2_df = cleaning_top_athlets(athlete_event_detailed_df)
 
+    #Geting the number of medals per sport
     sports_medals_year = pd.DataFrame(athlete_biography_extended2_df[(athlete_biography_extended2_df['country_noc'] == country) & (athlete_biography_extended2_df['year'] == int(year))].groupby('sport').sum()['medal'])
 
     return sports_medals_year
@@ -215,16 +199,15 @@ def clean_ath_datasets(df):
     return df.dropna()
 
 def athlete(sport='Athletics', name='Usain Bolt'):
-    #columns to drop and  dropping
+    #columns to drop and propprt dropping to avoid more computational time
     drop_cols_on_athlete_event_detailed={'edition_id', 'country_noc', 'result_id'}
-    drop_cols_on_athlete_biography={ 'name', 'country_noc'}
+    drop_cols_on_athlete_biography={'name', 'country_noc'}
     athlete_event_df = athlete_event_detailed_df.drop_duplicates()
     athlete_event_df = athlete_event_df.drop(columns=drop_cols_on_athlete_event_detailed)
     athlete_bio_df = athlete_biography_df.drop(columns=drop_cols_on_athlete_biography)
 
     #Merging to extract all the wanted info
     athlete_df = athlete_event_df.merge(athlete_bio_df, how ='left', on ='athlete_id')
-    #athlete_df = athlete_df.drop(columns={'result_id','athlete_id'})
 
     #Cleaning
     athlete_clean_df = clean_ath_datasets(athlete_df)
@@ -234,7 +217,4 @@ def athlete(sport='Athletics', name='Usain Bolt'):
     return athlete_info_df
 
 
-#print(desired_history())
-#print(proportional_medals_athlets())
-#print(top3_athlete_category())
 print(athlete())
