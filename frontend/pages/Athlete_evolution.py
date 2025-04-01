@@ -24,12 +24,12 @@ athlete = colb.selectbox('Select athlete', ath)
 
 buton = st.button('Search')
 if buton:
-    url ='http://127.0.0.1:8000/athlete_evolution?'
-    #url_render = 'https://olympiastats.onrender.com/athlete_evolution?'
+    #url ='http://127.0.0.1:8000/athlete_evolution?'
+    url_render = 'https://olympiastats.onrender.com/athlete_evolution?'
     params ={'sport':sport,
             'name': athlete}
 
-    response = requests.get(url, params=params)
+    response = requests.get(url_render, params=params)
     if str(response.status_code)[0] in '45':
             st.markdown(f'# Error {response.status_code}, please reload the window')# raises exception when not a 2xx response
             #st.rerun()

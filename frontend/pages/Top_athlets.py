@@ -38,8 +38,8 @@ category = col2.selectbox('Select category',cat )
 initial_year = col3.selectbox('Initial year', range(1896,2023))
 final_year = col4.selectbox('Final year', range(initial_year,2023))
 
-#url_render = 'https://olympiastats.onrender.com/best_athlets?'
-url ='http://127.0.0.1:8000/best_athlets'
+url_render = 'https://olympiastats.onrender.com/best_athlets?'
+#url ='http://127.0.0.1:8000/best_athlets'
 params = {'sport':sport,
           'category':category,
           'initial_year':initial_year,
@@ -47,7 +47,7 @@ params = {'sport':sport,
 
 buton = st.button('Check')
 if buton:
-    response = requests.get(url, params=params)
+    response = requests.get(url_render, params=params)
     #response.raise_for_status()  # raises exception when not a 2xx response
     if str(response.status_code)[0] in '45':
         st.markdown(f'# Error {response.status_code}, please reload the window')
