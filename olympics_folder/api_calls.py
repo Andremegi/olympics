@@ -7,6 +7,7 @@ from datetime import datetime
 app = FastAPI()
 
 @app.get('/')
+@app.head("/")
 def root():
     return {'Olympians say': 'VAMOS!'}
 
