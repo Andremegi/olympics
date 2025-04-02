@@ -11,6 +11,11 @@ app = FastAPI()
 def root():
     return {'Olympians say': 'VAMOS!'}
 
+@app.get("/healthz")
+@app.head("/healthz")
+async def health_check():
+    return {"status": "healthy"}
+
 @app.get('/best_countries')
 def best_countries(desired_edition='Olympics',
                     initial_year = 1896,
