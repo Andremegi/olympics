@@ -57,7 +57,7 @@ if buton:
         athlete_needed =pd.DataFrame.from_dict(response)
         year_table = athlete_needed[['Edition','Age']].drop_duplicates().set_index('Edition')
         st.table(data=year_table )
-        athlete_evolution_table = athlete_needed.groupby('Edition', as_index=False)[['Edition','event','Medal']].value_counts()
+        athlete_evolution_table = athlete_needed.groupby('Edition', as_index=False)[['Edition','event','Medal','position']].value_counts()
         athlete_evolution_table = athlete_evolution_table.rename(columns={'count': 'Number of medals', 'event': 'Event'})
         athlete_evolution_table.loc[athlete_evolution_table['Medal'] == 0 ,'Medal'] = 'No medals'
         athlete_evolution_table.loc[athlete_evolution_table['Medal'] == 'No medals' ,'Number of medals'] = 0

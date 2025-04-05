@@ -180,21 +180,23 @@ def born_year(date):
 
 def clean_ath_datasets(df):
     #Fillna
-    df['pos'] = df['pos'].fillna('-No information')
-    df['medal'] = df['medal'].fillna(0)
-    df['sex'] = df['sex'].fillna('-Not specified')
-    df['height'] = df['height'].fillna('-Not specified')
-    df['weight'] = df['weight'].fillna('-Not specified')
-    df['born'] = df['born'].fillna(0)
-    df['description'] = df['description'].fillna('-Not specified')
-    df['special_notes'] = df['special_notes'].fillna('-Not specified')
+    df.fillna({
+    'pos': '-No information',
+    'medal': 0,
+    'sex': '-Not specified',
+    'height': '-Not specified',
+    'weight': '-Not specified',
+    'born': 0,
+    'description': '-Not specified',
+    'special_notes': '-Not specified'
+    }, inplace=True)
 
     #Replacements
     df['pos'] = df['pos'].replace(['DNS','DNF', 'DQ'],['Did not start', 'Did not finish', 'Disqualified'])
 
     #New creations
     df['age'] = df.apply(lambda row:int(row['edition'][0:4]) - born_year(row['born']), axis=1)
-    df['age'] = df['age'].apply(lambda row : '-Not specified' if row > 100 else row)
+    df.loc[df['age'] > 100, 'age'] = '-Not specified'
 
     return df.dropna()
 
@@ -213,7 +215,7 @@ def athlete(sport='Athletics', name='Usain Bolt'):
     athlete_clean_df = clean_ath_datasets(athlete_df)
 
     #Filtering on what we want
-    athlete_info_df = athlete_clean_df [(athlete_clean_df['sport']==sport) & (athlete_clean_df['athlete']==name)]
+    athlete_info_df = athlete_clean_df[(athlete_clean_df['sport']==sport) & (athlete_clean_df['athlete']==name)]
     return athlete_info_df
 
 
