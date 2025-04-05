@@ -195,7 +195,17 @@ def clean_ath_datasets(df):
     df['pos'] = df['pos'].replace(['DNS','DNF', 'DQ'],['Did not start', 'Did not finish', 'Disqualified'])
 
     #New creations
-    df['age'] = df.apply(lambda row:int(row['edition'][0:4]) - born_year(row['born']), axis=1)
+    # Extract 4-digit year from 'born' column
+    df['born_year'] = df['born'].astype(str).str.extract(r'(\d{4})')
+
+    # Convert to numeric, invalid values become NaN
+    df['born_year'] = pd.to_numeric(df['born_year'], errors='coerce')
+
+    # Replace NaN with 0
+    df['born_year'] = df['born_year'].fillna(0).astype(int)
+    df['edition_year'] = df['edition'].str[:4].astype(int)
+    df['age'] = df['edition_year'] - df['born_year']
+    #df['age'] = df.apply(lambda row:int(row['edition'][0:4]) - born_year(row['born']), axis=1)
     df.loc[df['age'] > 100, 'age'] = '-Not specified'
 
     return df.dropna()
