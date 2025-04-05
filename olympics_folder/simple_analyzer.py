@@ -166,7 +166,6 @@ def evolution_per_year(year=1896, country='USA'):
 
     return sports_medals_year
 
-
 def born_year(date):
     if type(date) == str:
         list_date = date.split()
