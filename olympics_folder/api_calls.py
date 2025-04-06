@@ -119,7 +119,3 @@ def athlete_evolution(sport='Athletics', name ='Usain Bolt'):
             'description': athlete_df['description'].to_list(),
             'special notes': athlete_df['special_notes'].to_list(),
             'Age': athlete_df['age'].to_list()}
-
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8000))
-    uvicorn.run("olympics_folder.api_calls:app", host="0.0.0.0", port=port)
