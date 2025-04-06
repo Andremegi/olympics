@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Query
+from fastapi import HTTPException
 from typing import List
 import pandas as pd
 from olympics_folder.simple_analyzer import desired_history, proportional_medals_athlets, top3_athlete_category, country_evolution, number_athlets, country_to_noc, country_con_noc, athlete
@@ -17,7 +18,7 @@ async def health_check():
     return {"status": "healthy"}
 
 
-@app.head('/best_countries')
+
 @app.get('/best_countries')
 def best_countries(desired_edition='Olympics',
                     initial_year = 1896,
@@ -33,7 +34,7 @@ def best_countries(desired_edition='Olympics',
             'bronze': desired_df['bronze'].to_list(),
             'proport_countries':proportional_df.index.to_list()}
 
-@app.head('/best_athlets')
+
 @app.get('/best_athlets')
 def best_athlets(sport='Athletics',
                  category='1,500 metres, Men',
@@ -47,7 +48,7 @@ def best_athlets(sport='Athletics',
             'num_points':desired_points_info['points'].to_list(),
             'points_athlets_country': desired_points_info['country'].to_list()}]
 
-@app.head('/country_evolution')
+
 @app.get('/country_evolution')
 def country_evolution_api(country_noc='USA'):
     desired_country_evolution = country_evolution(country_noc)
@@ -66,14 +67,14 @@ def country_evolution_api(country_noc='USA'):
             'num_ath': desired_table_info['num_ath'].to_list()
             }]
 
-@app.head('/deeper_country_evolution')
+
 @app.get('/deeper_country_evolution')
 def deeper_country_evolution_api(year=1896, country_noc='USA'):
     evolution_df = evolution_per_year(str(year), country_noc)
     return {'sport': evolution_df.index.to_list(),
             'number_medals':evolution_df['medal'].to_list()}
 
-@app.head('/country_to_noc')
+
 @app.get('/country_to_noc')
 def change_country_name(argument):
 
@@ -86,7 +87,7 @@ def change_country_name(argument):
 
     return {'name': noc}
 
-@app.head("/list_country_names")
+
 @app.get("/list_country_names")
 def list_country_names(list: List[str] = Query(None)):
     names=[]
@@ -95,10 +96,13 @@ def list_country_names(list: List[str] = Query(None)):
 
     return {"list": names}
 
-@app.head("/athlete_evolution")
+
 @app.get("/athlete_evolution")
 def athlete_evolution(sport='Athletics', name ='Usain Bolt'):
     athlete_df = athlete(sport,name)
+
+    if athlete_df.empty:
+        raise HTTPException(status_code=404, detail="Athlete not found.")
 
     return {'Edition':athlete_df['edition'].to_list(),
             'country':athlete_df['country'].to_list(),

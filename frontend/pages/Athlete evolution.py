@@ -30,10 +30,15 @@ if buton:
             'name': athlete}
 
     response = requests.get(url_render, params=params)
-    if str(response.status_code)[0] in '45':
-            st.markdown(f'# Error {response.status_code}, please reload the window')# raises exception when not a 2xx response
-            #st.rerun()
-    #response.raise_for_status():
+    if response.status_code >= 400:
+        try:
+            data = response.json()
+            st.error(f"Error {response.status_code}: {data}")
+        except Exception as e:
+            st.error(f"Error {response.status_code}: Could not parse backend response.")
+            st.write("Raw response:")
+            st.code(response.text)
+        st.stop()
     if response.status_code != 204:
         response = response.json()
 

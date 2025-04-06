@@ -194,18 +194,13 @@ def clean_ath_datasets(df):
     df['pos'] = df['pos'].replace(['DNS','DNF', 'DQ'],['Did not start', 'Did not finish', 'Disqualified'])
 
     #New creations
-    # Extract 4-digit year from 'born' column
-    df['born_year'] = df['born'].astype(str).str.extract(r'(\d{4})')
-
-    # Convert to numeric, invalid values become NaN
+    # Born year extraction
+    df['born_year'] = df['born'].astype(str).str.extract(r'(\d{4})')[0]
     df['born_year'] = pd.to_numeric(df['born_year'], errors='coerce')
 
-    # Replace NaN with 0
-    df['born_year'] = df['born_year'].fillna(0).astype(int)
     df['edition_year'] = df['edition'].str[:4].astype(int)
     df['age'] = df['edition_year'] - df['born_year']
-    #df['age'] = df.apply(lambda row:int(row['edition'][0:4]) - born_year(row['born']), axis=1)
-    df.loc[df['age'] > 100, 'age'] = '-Not specified'
+    df.loc[(df['age'] > 100) | (df['age'] < 0), 'age'] = None
 
     return df.dropna()
 
@@ -213,8 +208,9 @@ def athlete(sport='Athletics', name='Usain Bolt'):
     #columns to drop and propprt dropping to avoid more computational time
     drop_cols_on_athlete_event_detailed={'edition_id', 'country_noc', 'result_id'}
     drop_cols_on_athlete_biography={'name', 'country_noc'}
-    athlete_event_df = athlete_event_detailed_df.drop_duplicates()
-    athlete_event_df = athlete_event_df.drop(columns=drop_cols_on_athlete_event_detailed)
+
+    #Drop
+    athlete_event_df = athlete_event_detailed_df.drop_duplicates().drop(columns=drop_cols_on_athlete_event_detailed)
     athlete_bio_df = athlete_biography_df.drop(columns=drop_cols_on_athlete_biography)
 
     #Merging to extract all the wanted info
