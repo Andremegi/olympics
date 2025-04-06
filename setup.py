@@ -8,5 +8,5 @@ setup(
     name='olympics',
     version="0.0.1",
     install_requires=requirements,
-    packages=find_packages()
+    packages=find_packages(include=["olympics_folder", "olympics_folder.*"])
 )
