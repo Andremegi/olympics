@@ -46,7 +46,8 @@ number_countries = col4.text_input('Number of countries', number)
 
 
 buton = st.button('Compare')
-url_render = 'https://olympiastats.onrender.com/best_countries?'
+url_railways = 'https://olympics-production-247f.up.railway.app/best_countries?'
+#url_render = 'https://olympiastats.onrender.com/best_countries?'
 #url = 'http://127.0.0.1:8000/best_countries?'
 
 if buton :
@@ -55,7 +56,7 @@ if buton :
               'final_year': final_year,
               'number_countries': number_countries}
 
-    response = requests.get(url_render, params=params)
+    response = requests.get(url_railways, params=params)
     #response.raise_for_status()  # raises exception when not a 2xx response
     if str(response.status_code)[0] in '45':
         st.markdown(f'# Error {response.status_code}, please reload the window')
@@ -89,15 +90,16 @@ if buton :
 
         # you need to caal to the API so your function is recognised
         #url_con_noc ='http://127.0.0.1:8000/list_country_names?'
-        url_country_list_render ='https://olympiastats.onrender.com/list_country_names?'
+        #url_country_list_render ='https://olympiastats.onrender.com/list_country_names?'
+        url_country_list_railways = 'https://olympics-production-247f.up.railway.app/list_country_names?'
 
         #1. for the best countries
         # Before , to much processes, sorted_non_spaces[f'Top {number_countries} countries'] = sorted_non_spaces['best_countries'].apply(lambda row : requests.get(url_country_name_render, params = {'argument':row }).json()['name'])
-        sorted_non_spaces[f'Top {number_countries} countries'] = requests.get(url_country_list_render, params = {'list': sorted_non_spaces['best_countries'].to_list()}).json()['list']
+        sorted_non_spaces[f'Top {number_countries} countries'] = requests.get(url_country_list_railways, params = {'list': sorted_non_spaces['best_countries'].to_list()}).json()['list']
 
         # 2. for the medal athlets ratio
         # Before sorted_non_spaces[f'Ratio medal/athletes'] = sorted_non_spaces['medal/athletes best countries'].apply(lambda row : requests.get(url_country_name_render, params = {'argument':row }).json()['name'])
-        sorted_non_spaces[f'Ratio medal/athletes'] = requests.get(url_country_list_render, params = {'list': sorted_non_spaces['medal/athletes best countries'].to_list()}).json()['list']
+        sorted_non_spaces[f'Ratio medal/athletes'] = requests.get(url_country_list_railways, params = {'list': sorted_non_spaces['medal/athletes best countries'].to_list()}).json()['list']
 
         st.markdown(f'Bellow we compare the first **{number_countries}** countries in **descending** order, regarding:')
 

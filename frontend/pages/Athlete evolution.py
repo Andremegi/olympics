@@ -25,11 +25,12 @@ athlete = colb.selectbox('Select athlete', ath)
 buton = st.button('Search')
 if buton:
     #url ='http://127.0.0.1:8000/athlete_evolution?'
-    url_render = 'https://olympiastats.onrender.com/athlete_evolution?'
+    #url_render = 'https://olympiastats.onrender.com/athlete_evolution?'
+    url_railways = 'https://olympics-production-247f.up.railway.app/athlete_evolution?'
     params ={'sport':sport,
             'name': athlete}
 
-    response = requests.get(url_render, params=params)
+    response = requests.get(url_railways, params=params)
     if response.status_code >= 400:
         try:
             data = response.json()

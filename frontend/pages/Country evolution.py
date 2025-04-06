@@ -17,17 +17,19 @@ st.markdown("""
 
 country = st.selectbox('Select country', countries)
 
-url_render ='https://olympiastats.onrender.com/country_evolution?'
+url_railways ='https://olympics-production-247f.up.railway.app/country_evolution?'
+#url_render ='https://olympiastats.onrender.com/country_evolution?'
 #url ='http://127.0.0.1:8000/country_evolution'
 
 #url_country_name ='http://127.0.0.1:8000/country_to_noc?'
-url_country_name_render ='https://olympiastats.onrender.com/country_to_noc?'
-param = requests.get(url_country_name_render, params = {'argument':country}).json()['name']
+#url_country_name_render ='https://olympiastats.onrender.com/country_to_noc?'
+url_countrynames_railways = 'https://olympics-production-247f.up.railway.app/country_to_noc?'
+param = requests.get(url_countrynames_railways, params = {'argument':country}).json()['name']
 params = {'country_noc': param }
 
 
 
-response = requests.get(url_render, params=params)
+response = requests.get(url_railways, params=params)
 #response.raise_for_status()  # raises exception when not a 2xx response
 if str(response.status_code)[0] in '45':
         st.markdown(f'# Error {response.status_code}, please reload the window')
@@ -56,11 +58,12 @@ if response.status_code != 204:
         year = st.selectbox('Select a year', table_country_ev_df.index)
         buton2 = st.button('Select')
         if buton2:
-            url3_render = 'https://olympiastats.onrender.com/deeper_country_evolution?'
+            url_railways = 'https://olympics-production-247f.up.railway.app/deeper_country_evolution?'
+            #url3_render = 'https://olympiastats.onrender.com/deeper_country_evolution?'
             #url3= 'http://127.0.0.1:8000/deeper_country_evolution'
             params3= {'year':int(year),
                     'country_noc': param}
-            response3 = requests.get(url3_render,params=params3)
+            response3 = requests.get(url_railways,params=params3)
             #response3.raise_for_status()  # raises exception when not a 2xx response
             if str(response3.status_code)[0] in '45':
                 st.markdown(f'# Error {response.status_code}, please reload the window')
