@@ -9,4 +9,5 @@ COPY setup.py setup.py
 
 COPY olympics_folder olympics_folder
 
-CMD uvicorn olympics_folder.api_calls:app --host 0.0.0.0 --port $PORT
+CMD ["python", "olympics_folder/api_calls.py"]
+#CMD uvicorn olympics_folder.api_calls:app --host 0.0.0.0 --port $PORT

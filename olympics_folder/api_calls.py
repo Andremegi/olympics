@@ -5,6 +5,7 @@ import pandas as pd
 from olympics_folder.simple_analyzer import desired_history, proportional_medals_athlets, top3_athlete_category, country_evolution, number_athlets, country_to_noc, country_con_noc, athlete
 from olympics_folder.simple_analyzer import evolution_per_year
 from datetime import datetime
+import uvicorn
 app = FastAPI()
 
 @app.get('/')
@@ -117,3 +118,7 @@ def athlete_evolution(sport='Athletics', name ='Usain Bolt'):
             'description': athlete_df['description'].to_list(),
             'special notes': athlete_df['special_notes'].to_list(),
             'Age': athlete_df['age'].to_list()}
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run("olympics_folder.api_calls:app", host="0.0.0.0", port=port)
