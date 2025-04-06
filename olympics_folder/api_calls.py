@@ -6,6 +6,7 @@ from olympics_folder.simple_analyzer import desired_history, proportional_medals
 from olympics_folder.simple_analyzer import evolution_per_year
 from datetime import datetime
 import uvicorn
+import os
 app = FastAPI()
 
 @app.get('/')
