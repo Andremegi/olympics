@@ -11,12 +11,9 @@ path = os.path.dirname(__file__)
 # Path to documents
 path_to_docs = os.path.join(path, 'documents')
 
-
-event_results_df = pd.read_csv(f'{path_to_docs}/Olympic_Event_Results.csv', skipinitialspace=True)
 athlete_event_detailed_df= pd.read_csv(f'{path_to_docs}/Olympic_Athlete_Event_Details.csv', skipinitialspace=True)
 medal_history_df = pd.read_csv(f'{path_to_docs}/Olympic_Medal_Tally_History.csv', skipinitialspace=True)
 athlete_biography_df = pd.read_csv(f'{path_to_docs}/Olympic_Athlete_Biography.csv', skipinitialspace=True)
-games_summary_df= pd.read_csv(f'{path_to_docs}/Olympic_Games_Summary.csv', skipinitialspace=True)
 country_profiles_df = pd.read_csv(f'{path_to_docs}/Olympic_Country_Profiles.csv', skipinitialspace=True)
 
 def desired_history(desired_edition='Olympics',
