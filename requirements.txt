@@ -121,4 +121,3 @@ websocket-client==1.8.0
 fastapi
 uvicorn
 streamlit
-plotly
