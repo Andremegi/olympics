@@ -220,8 +220,8 @@ def athlete(sport='Athletics', name='Usain Bolt'):
     athlete_clean_df = clean_ath_datasets(athlete_df)
 
     #Filtering on what we want
-    athlete_info_df = athlete_clean_df[(athlete_clean_df['sport']==sport) & (athlete_clean_df['athlete']==name)]
-    return athlete_info_df
-
+    #athlete_info_df = athlete_clean_df[(athlete_clean_df['sport']==sport) & (athlete_clean_df['athlete']==name)]
+    #return athlete_info_df
+    return athlete_clean_df[(athlete_clean_df['sport']==sport) & (athlete_clean_df['athlete']==name)]
 
 print(athlete())

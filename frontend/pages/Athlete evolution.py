@@ -35,6 +35,8 @@ if buton:
         try:
             data = response.json()
             st.error(f"Error {response.status_code}: {data}")
+            st.error('### Please reload the window ')
+            st.stop()
         except Exception as e:
             st.error(f"Error {response.status_code}: Could not parse backend response.")
             st.write("Raw response:")
@@ -62,6 +64,7 @@ if buton:
 
         athlete_needed =pd.DataFrame.from_dict(response)
         year_table = athlete_needed[['Edition','Age']].drop_duplicates().set_index('Edition')
+        year_table['Age'] = year_table['Age'].astype(int)
         st.table(data=year_table )
         athlete_evolution_table = athlete_needed.groupby('Edition', as_index=False)[['Edition','event','Medal','position']].value_counts()
         athlete_evolution_table = athlete_evolution_table.rename(columns={'count': 'Number of medals', 'event': 'Event'})
