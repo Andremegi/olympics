@@ -195,7 +195,7 @@ def clean_ath_datasets(df):
 
     #Replacements
     # Reemplazo de los acrónimos con sus significados
-    df['pos'] = df['pos'].map(acronym_map)
+    df['pos'] = df['pos'].replace(acronym_map).fillna(df['pos'])
 
     #New creations
     # Born year extraction
