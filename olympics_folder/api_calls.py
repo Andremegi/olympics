@@ -5,8 +5,7 @@ import pandas as pd
 from olympics_folder.simple_analyzer import desired_history, proportional_medals_athlets, top3_athlete_category, country_evolution, number_athlets, country_to_noc, country_con_noc, athlete
 from olympics_folder.simple_analyzer import evolution_per_year
 from datetime import datetime
-import uvicorn
-import os
+
 app = FastAPI()
 
 @app.get('/')

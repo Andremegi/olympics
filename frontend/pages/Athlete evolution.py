@@ -1,9 +1,5 @@
 import streamlit as st
-from  datetime import datetime
 import requests
-import matplotlib.pyplot as plt
-import seaborn as sns
-import plotly.express as px
 import pandas as pd
 import os
 
@@ -60,7 +56,7 @@ if buton:
         st.markdown(f"- **Description** : {response['description'][0]}")
         st.markdown(f"- **Special notes** : {response['special notes'][0]}")
 
-        st.markdown('- Olympic year and age the athlete where when compited: ')
+        st.markdown('#### Olympic year and age the athlete where when compited: ')
 
         athlete_needed =pd.DataFrame.from_dict(response)
         year_table = athlete_needed[['Edition','Age']].drop_duplicates().set_index('Edition')
@@ -82,7 +78,7 @@ if buton:
         st.line_chart(data = edition_medals, x='Edition' ,y ='Number of medals',  x_label ='Olympic year', y_label ='Number of medals')
 
 
-        st.markdown(" Deep depiction of the medals ")
+        st.markdown(" #### Deep depiction of the medals ")
         st.table(athlete_evolution_table.set_index('Edition'))
         df_acron = pd.DataFrame({
     'Acronym': ['AC', 'DNF', 'DNQ', 'DNS', 'DQ', 'EL', 'HC', 'HM', 'MNK', 'NH', 'NM', 'NP', 'NVL', 'TNK', 'EL']
@@ -108,5 +104,5 @@ if buton:
 
         # Reemplazo de los acrónimos con sus significados
         df_acron['Full Meaning'] = df_acron['Acronym'].map(acronym_map)
-        st.markdown('####List of the acronimus:')
+        st.markdown('#### List of the acronimus:')
         st.table(df_acron)
