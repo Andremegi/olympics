@@ -84,3 +84,29 @@ if buton:
 
         st.markdown(" Deep depiction of the medals ")
         st.table(athlete_evolution_table.set_index('Edition'))
+        df_acron = pd.DataFrame({
+    'Acronym': ['AC', 'DNF', 'DNQ', 'DNS', 'DQ', 'EL', 'HC', 'HM', 'MNK', 'NH', 'NM', 'NP', 'NVL', 'TNK', 'EL']
+})
+
+        # Diccionario de mapeo
+        acronym_map = {
+            'AC': 'Active Competitor',
+            'DNF': 'Did Not Finish',
+            'DNQ': 'Did Not Qualify',
+            'DNS': 'Did Not Start',
+            'DQ': 'Disqualified',
+            'EL': 'Eliminated',
+            'HC': 'Hors Catégorie',
+            'HM': 'Honourable Mention',
+            'MNK': 'Shooting – Running Target, 50 metres, Men',
+            'NH': 'No Height',
+            'NM': 'No Mark',
+            'NP': 'Not Placed',
+            'NVL': 'No Valid Lift',
+            'TNK': 'Athletics – 10,000 metres, Men'
+        }
+
+        # Reemplazo de los acrónimos con sus significados
+        df_acron['Full Meaning'] = df_acron['Acronym'].map(acronym_map)
+        st.markdown('####List of the acronimus:')
+        st.table(df_acron)

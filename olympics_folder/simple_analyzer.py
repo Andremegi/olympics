@@ -36,7 +36,6 @@ def desired_history(desired_edition='Olympics',
     # 2. The years you want to be count
     desired_medal_history_df = desired_medal_history_df[(desired_medal_history_df['year']>=int(initial_year)) & (desired_medal_history_df['year']<= int(final_year)) ]
 
-
     # 3. Counts the number of medals per country , order in descending order and give as result the top number_countries param given
     medal_sum_df = desired_medal_history_df[['country_noc', 'total', 'gold', 'silver', 'bronze']].groupby('country_noc').sum().sort_values('total',ascending = False,ignore_index=False).head(int(number_countries))
 
@@ -163,18 +162,25 @@ def evolution_per_year(year=1896, country='USA'):
 
     return sports_medals_year
 
-def born_year(date):
-    if type(date) == str:
-        list_date = date.split()
-        target = re.sub('[^0-9]','', list_date[-1])
-        if ('1' in  target) or ('2' in target) :
-            return int(target)
-        else: return 0
-
-    return int(date)
-
-
 def clean_ath_datasets(df):
+    # Acronimus set :
+    acronym_map = {
+    'AC': 'Active Competitor',
+    'DNF': 'Did Not Finish',
+    'DNQ': 'Did Not Qualify',
+    'DNS': 'Did Not Start',
+    'DQ': 'Disqualified',
+    'EL': 'Eliminated',
+    'HC': 'Hors Catégorie',
+    'HM': 'Honourable Mention',
+    'MNK': 'Shooting – Running Target, 50 metres, Men',
+    'NH': 'No Height',
+    'NM': 'No Mark',
+    'NP': 'Not Placed',
+    'NVL': 'No Valid Lift',
+    'TNK': 'Athletics – 10,000 metres, Men'
+}
+
     #Fillna
     df.fillna({
     'pos': '-No information',
@@ -188,7 +194,8 @@ def clean_ath_datasets(df):
     }, inplace=True)
 
     #Replacements
-    df['pos'] = df['pos'].replace(['DNS','DNF', 'DQ'],['Did not start', 'Did not finish', 'Disqualified'])
+    # Reemplazo de los acrónimos con sus significados
+    df['pos'] = df['pos'].map(acronym_map)
 
     #New creations
     # Born year extraction
