@@ -22,11 +22,12 @@ buton = st.button('Search')
 if buton:
     #url ='http://127.0.0.1:8000/athlete_evolution?'
     #url_render = 'https://olympiastats.onrender.com/athlete_evolution?'
-    url_railways = 'https://olympics-production-247f.up.railway.app/athlete_evolution?'
+    #url_railways = 'https://olympics-production-247f.up.railway.app/athlete_evolution?'
+    url_server = 'http://46.62.198.80:8000/athlete_evolution?'
     params ={'sport':sport,
             'name': athlete}
 
-    response = requests.get(url_railways, params=params)
+    response = requests.get(url_server, params=params)
     if response.status_code >= 400:
         try:
             data = response.json()
