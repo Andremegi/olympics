@@ -6,7 +6,7 @@ path = os.path.dirname(__file__)
 # Path to image
 path_to_olimpics_logo = os.path.join(path, '..','olympics_folder','documents', 'olympics_logo.png')
 st.markdown("""
-    #        Welcome to the Olympic App """)
+    #        Welcome to the Olympics Dashboard """)
 
 st.image(path_to_olimpics_logo,width=50, use_container_width=True)
 
